@@ -30,19 +30,34 @@ contract SimpleDex {
         /*
         Penjelasan
         1. Keadaan Awal (Sebelum Swap)
-        Kita punya dua reserve di pool:
+            Kita punya dua reserve di pool:
 
-            rIn × rOut = k
-        Ini adalah invariant — nilai k harus tetap sama sebelum dan sesudah swap.
+                rIn × rOut = k
+
+            Ini adalah invariant, nilai k harus tetap sama sebelum dan sesudah swap.
 
         2. Setelah Swap
-        Setelah user mengirim `amountIn`:
+            Ketika seseorang memasukkan amountIn token, maka:
 
-        rIn menjadi rIn + amountIn
-        Untuk menjaga invariant, reserve baru dari token keluar adalah:
+                Reserve In bertambah: rIn + amountIn
+                Reserve Out berkurang: rOut - amountOut
+                Karena k harus tetap konstan:
 
-        rOut_baru = k / (rIn + amountIn)
+                (rIn + amountIn) × (rOut - amountOut) = k
+        
+        3. Mencari amountOut
+            Kita ubah persamaan untuk mendapatkan amountOut:
 
+                amountOut = rOut - k / (rIn + amountIn)
+        
+        4. Contoh Matematis
+            Misal: rIn = 100, rOut = 200, amountIn = 10
+
+            k = 100 × 200 = 20,000
+            amountOut = 200 - 20,000 / (100 + 10)
+                      = 200 - 20,000 / 110
+                      = 200 - 181.81
+                      = 18.19
         */
     }
 
