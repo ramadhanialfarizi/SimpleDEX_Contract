@@ -3,7 +3,7 @@ pragma solidity ^0.8.20;
 
 import {IERC20} from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
-contract SimpleDex{
+contract SimpleDex {
     IERC20 public tokenA;
     IERC20 public tokenB;
 
@@ -18,7 +18,6 @@ contract SimpleDex{
         tokenB = IERC20(_tokenB);
     }
 
-
     // AMM Math
     function _calculateAmountOut(
         uint256 rIn,
@@ -27,6 +26,24 @@ contract SimpleDex{
     ) private pure returns (uint256) {
         // x * y = k  →  amountOut = rOut - k / (rIn + amountIn)
         return rOut - (rIn * rOut) / (rIn + amountIn);
+
+        /*
+        Penjelasan
+        1. Keadaan Awal (Sebelum Swap)
+        Kita punya dua reserve di pool:
+
+            rIn × rOut = k
+        Ini adalah invariant — nilai k harus tetap sama sebelum dan sesudah swap.
+
+        2. Setelah Swap
+        Setelah user mengirim `amountIn`:
+
+        rIn menjadi rIn + amountIn
+        Untuk menjaga invariant, reserve baru dari token keluar adalah:
+
+        rOut_baru = k / (rIn + amountIn)
+
+        */
     }
 
     // Fungsi untuk mensupply likuiditas token
@@ -43,8 +60,11 @@ contract SimpleDex{
     }
 
     function swap(address tokenIn, uint256 amountIn) external {
-        require(tokenIn == address(tokenA) || tokenIn == address(tokenB), "invalid token");
-				
+        require(
+            tokenIn == address(tokenA) || tokenIn == address(tokenB),
+            "invalid token"
+        );
+
         bool isAtoB = tokenIn == address(tokenA);
 
         (uint256 rIn, uint256 rOut) = isAtoB
